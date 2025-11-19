@@ -1,7 +1,7 @@
 # Proyecto Final de Machine Learning - Database II
-## Análisis del Dataset Yeast
+## Análisis de Clasificación del Dataset Yeast
 
-Este proyecto implementa un análisis completo de Machine Learning sobre el dataset Yeast (Protein Localization Sites), aplicando múltiples técnicas vistas en el curso.
+Este proyecto implementa un análisis completo de **clasificación multiclase** sobre el dataset Yeast (Protein Localization Sites), aplicando técnicas avanzadas de manejo de desbalanceo, selección de características y optimización de modelos.
 
 ## 📁 Estructura del Proyecto
 
@@ -47,32 +47,48 @@ ML_ProyectoFinalDB2/
 
 ## 🛠️ Métodos Implementados
 
-### 1. Imputación de Valores Faltantes
-- **Forward/Backward Fill**: Imputación secuencial
-- **KNNImputer**: Imputación basada en k-vecinos más cercanos
+### 1. Carga de Datos
+- **Fuente Oficial**: UCI ML Repository mediante `ucimlrepo` (ID: 110)
+- **Sin valores faltantes**: Dataset confirmado completo
+- **Análisis de desbalanceo**: Identificación de clases minoritarias
 
-### 2. Regularización
-- **Ridge (L2 Regularization)**: Penalización cuadrática
-- **Lasso (L1 Regularization)**: Penalización absoluta con selección de features
-- **Elastic Net**: Combinación de L1 y L2
+### 2. Evaluación de Escalamiento
+- Comparación de rendimiento con/sin escalamiento
+- **StandardScaler**: Para modelos sensibles a la escala
 
-### 3. Detección de Outliers (PyOD)
+### 3. Detección de Outliers (PyOD) con Protección de Clases Minoritarias
 - **KNN**: K-Nearest Neighbors para detección de anomalías
 - **Isolation Forest**: Aislamiento aleatorio de observaciones
 - **LOF**: Local Outlier Factor
+- **CRÍTICO**: Protección de outliers en clases minoritarias (< 5%)
 
 ### 4. Selección de Características
-- **Boruta**: Método basado en Random Forest con shadow features
-- **Lasso**: Selección automática mediante coeficientes L1
+- **RFE (Recursive Feature Elimination)**: Con RandomForestClassifier
+- **Lasso (L1)**: Logistic Regression con regularización L1
 - **Stepwise (Forward Selection)**: Búsqueda secuencial hacia adelante
 
-### 5. Árboles de Decisión
-- **Árbol de Clasificación**: Con optimización de hiperparámetros vía GridSearch
-- **Árbol de Regresión**: Para predicción continua de clases codificadas
+### 5. Manejo de Desbalanceo
+- **SMOTE**: Synthetic Minority Over-sampling Technique
+- **Random Oversampling**: Sobremuestreo aleatorio
+- Mejora de Balanced Accuracy
 
-### 6. Optimización de Hiperparámetros
-- **GridSearchCV**: Búsqueda exhaustiva de hiperparámetros óptimos
-- **Cross-Validation**: Validación cruzada de 5 folds
+### 6. Modelos de Clasificación con Regularización
+- **Ridge (L2)**: Logistic Regression con penalización L2
+- **Lasso (L1)**: Logistic Regression con penalización L1
+- **Elastic Net**: Logistic Regression con L1 + L2
+- **GridSearchCV**: Optimización de hiperparámetros
+
+### 7. Modelos Ensemble y Avanzados
+- **Árbol de Decisión**: Clasificador optimizado
+- **Random Forest**: Ensemble de árboles
+- **Gradient Boosting**: Boosting secuencial
+- **SVM**: Support Vector Machine con kernel RBF
+
+### 8. Métricas de Clasificación
+- **Accuracy**: Tasa de acierto global
+- **Balanced Accuracy**: Ajustada por desbalanceo
+- **F1-Score (weighted)**: Balance precision/recall ponderado
+- **Classification Report**: Métricas por clase
 
 ## 📦 Instalación
 
@@ -97,10 +113,10 @@ scikit-learn==1.3.0
 matplotlib==3.7.2
 seaborn==0.12.2
 pyod==1.1.0
-boruta==0.3
 mlxtend==0.22.0
 jupyter==1.0.0
 imbalanced-learn==0.11.0
+ucimlrepo
 ```
 
 ## 🚀 Uso
@@ -119,33 +135,35 @@ jupyter notebook yeast_ml_analysis.ipynb
 El notebook está organizado en las siguientes secciones:
 
 1. **Importar Librerías**: Carga de todas las dependencias necesarias
-2. **Carga y Exploración de Datos**: Análisis exploratorio inicial
-3. **Preparación de Datos**: Separación de features y target
-4. **Imputación de Valores**: Comparación de métodos de imputación
-5. **Detección de Outliers**: Aplicación de PyOD
-6. **Selección de Características**: Boruta, Lasso y Stepwise
-7. **Modelos de Regularización**: Ridge, Lasso y Elastic Net
-8. **Árboles de Decisión**: Clasificación y regresión
-9. **Comparativa Final**: Evaluación de todos los modelos
-10. **Conclusiones**: Resumen de resultados
+2. **Carga y Exploración de Datos**: Desde UCI ML Repository oficial
+3. **Preparación de Datos**: Análisis de desbalanceo y codificación
+4. **Evaluación de Escalamiento**: Comparación con/sin scaling
+5. **Detección de Outliers**: PyOD con protección de clases minoritarias
+6. **Selección de Características**: RFE, Lasso, Stepwise
+7. **Manejo de Desbalanceo**: SMOTE y Random Oversampling
+8. **Modelos de Clasificación**: Regularización y optimización
+9. **Árboles de Decisión y Ensemble**: RF, GB, SVM
+10. **Comparativa Final**: Evaluación con métricas de clasificación
+11. **Conclusiones**: Resumen y recomendaciones
 
 ## 📈 Resultados Esperados
 
 El notebook genera:
 
 - **Visualizaciones**:
-  - Distribución de clases
+  - Distribución de clases y desbalanceo
   - Matriz de correlación
-  - Comparación de métodos de imputación
-  - Detección de outliers (múltiples métodos)
-  - Diagrama de Venn para selección de características
-  - Árbol de decisión visualizado
+  - Análisis de outliers por clase
+  - Comparación de métodos de selección de características
+  - Árboles de decisión visualizados
   - Matriz de confusión
   - Gráficas comparativas de modelos
 
-- **Métricas**:
-  - **Regresión**: MSE, MAE, R²
-  - **Clasificación**: Accuracy, Precision, Recall, F1-Score
+- **Métricas de Clasificación**:
+  - **Accuracy**: Tasa de acierto
+  - **Balanced Accuracy**: Ajustada por desbalanceo
+  - **F1-Score (weighted)**: Balance precision/recall
+  - **Classification Report**: Precision, Recall, F1 por clase
   - Importancia de características
 
 - **Comparativa Final**:
